@@ -170,7 +170,7 @@ public class DrinkActivity extends Activity {
 	private double calculatePercentageLeft(int startTime, int endTime, int numBeers) {
 		int maxSeconds = endTime - startTime; 
 		// Current time
-		Calendar c = Calendar.getInstance(); 
+		Calendar c = Calendar.getInstance();
 		int hour = c.get(Calendar.HOUR_OF_DAY); // 0 - 23
 		int minute = c.get(Calendar.MINUTE); // 0 - 59
 		int currentTime = hour*60*60 + minute*60;
