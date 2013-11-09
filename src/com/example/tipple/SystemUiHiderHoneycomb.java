@@ -1,4 +1,4 @@
-package com.example.tipple.util;
+package com.example.tipple;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

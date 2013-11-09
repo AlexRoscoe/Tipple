@@ -1,6 +1,7 @@
 package com.example.tipple;
 
 import java.util.Calendar;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -20,13 +23,21 @@ public class DrinkActivity extends Activity {
 	 * Whether or not the system UI should be auto-hidden after
 	 * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
 	 */
+	
+	int progressVal;
+	int numBeers;
+	int startTime;
+	int endTime;
+	int numBottlesCompleted;
+	ProgressBar progress;
+	
 	private static final boolean AUTO_HIDE = true;
 
 	/**
 	 * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
 	 * user interaction before hiding the system UI.
 	 */
-	private static final int AUTO_HIDE_DELAY_MILLIS = 1000;
+	private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
 
 	/**
 	 * If set, will toggle the system UI visibility upon interaction. Otherwise,
@@ -43,30 +54,32 @@ public class DrinkActivity extends Activity {
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
-	
-	private int startTime, endTime, numBeers; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_drink);
-		
-		Bundle b = new Bundle(); 
+		Bundle b = new Bundle();
 		b = getIntent().getExtras(); 
-		this.startTime = b.getInt("startTime");
-		this.endTime = b.getInt("endTime"); 
-		this.numBeers = b.getInt("numBeers");
+		if (b != null){
+			numBeers = b.getInt("numBeers");
+			startTime = b.getInt("startMinutes");
+			endTime = b.getInt("endMinutes");
+		}
 		
+		progress = (ProgressBar) findViewById(R.id.progressBar1);
+		setContentView(R.layout.activity_drink);
 
-		final View controlsView = findViewById(R.id.fullscreen_content_controls);
-		final View contentView = findViewById(R.id.fullscreen_content);
+		final View controlsView = findViewById(R.id.videoMediaControllerHolder);
+		final View contentView = findViewById(R.id.grid1);
 
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
-		mSystemUiHider = SystemUiHider.getInstance(this, contentView, HIDER_FLAGS);
+		mSystemUiHider = SystemUiHider.getInstance(this, contentView,
+				HIDER_FLAGS);
 		mSystemUiHider.setup();
-		mSystemUiHider.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
+		mSystemUiHider
+				.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
 					// Cached values.
 					int mControlsHeight;
 					int mShortAnimTime;
@@ -116,12 +129,7 @@ public class DrinkActivity extends Activity {
 				}
 			}
 		});
-
-		// Upon interacting with UI controls, delay any scheduled hide()
-		// operations to prevent the jarring behavior of controls going away
-		// while interacting with the UI.
-		findViewById(R.id.dummy_button).setOnTouchListener(
-				mDelayHideTouchListener);
+	
 	}
 
 	@Override
@@ -131,7 +139,7 @@ public class DrinkActivity extends Activity {
 		// Trigger the initial hide() shortly after the activity has been
 		// created, to briefly hint to the user that UI controls
 		// are available.
-		delayedHide(5000);
+		delayedHide(100);
 	}
 
 	/**
@@ -149,12 +157,14 @@ public class DrinkActivity extends Activity {
 		}
 	};
 
+	
 	Handler mHideHandler = new Handler();
 	Runnable mHideRunnable = new Runnable() {
 		@Override
 		public void run() {
-			calculatePercentageLeft(startTime, endTime, numBeers); 
-			delayedHide(5000); 
+			progress.setMax(100);
+			progress.setProgress(calculatePercentageLeft(startTime, endTime, numBeers)); 
+			delayedHide(5000);
 		}
 	};
 
@@ -167,7 +177,7 @@ public class DrinkActivity extends Activity {
 		mHideHandler.postDelayed(mHideRunnable, delayMillis);
 	}
 	
-	private double calculatePercentageLeft(int startTime, int endTime, int numBeers) {
+	private int calculatePercentageLeft(int startTime, int endTime, int numBeers) {
 		int maxSeconds = endTime - startTime; 
 		// Current time
 		Calendar c = Calendar.getInstance();
@@ -178,8 +188,8 @@ public class DrinkActivity extends Activity {
 		
 		double percentageCompleted = currentSeconds / maxSeconds; 
 		double bottlePercentage = percentageCompleted % numBeers;
-		int numBottlesCompleted = (int) (percentageCompleted / numBeers); 
+		numBottlesCompleted = (int) (percentageCompleted / numBeers); 
 		
-		return bottlePercentage; 
+		return (int) bottlePercentage; 
 	}
 }
