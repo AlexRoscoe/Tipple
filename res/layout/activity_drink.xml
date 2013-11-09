@@ -1,36 +1,16 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@style/FullscreenTheme"
-    tools:context=".DrinkActivity" >
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    >
 
-    <!--
-         The primary full-screen view. This can be replaced with whatever view
-         is needed to present your content, e.g. VideoView, SurfaceView,
-         TextureView, etc.
-    -->
-    <SurfaceView
-        android:id="@+id/grid1"
-        style="@style/FullscreenTheme">
-    </SurfaceView>
-    
+	<view
+	    class="com.example.tipple.DrinkUp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_weight="0.0"
+	/>
 
-    <!--
-         This FrameLayout insets its children based on system windows using
-         android:fitsSystemWindows.
-    -->
-    <FrameLayout 
-        android:id="@+id/videoMediaControllerHolder"
-	    android:layout_width="match_parent"
-	    android:layout_height="match_parent"
-	    android:fitsSystemWindows="true"
-	    android:animateLayoutChanges="true"/>
-
-    <ProgressBar
-        android:id="@+id/progressBar1"
-    	style="@style/Widget.ProgressBar.Vertical"
-        android:layout_width="513dp"
-        android:layout_height="match_parent" />
-
-</FrameLayout>
+</LinearLayout>
