@@ -1,7 +1,5 @@
 package com.example.tipple;
 
-import com.example.tipple.util.SystemUiHider;
-
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
@@ -9,6 +7,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
+
+import com.example.tipple.util.SystemUiHider;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -49,10 +50,19 @@ public class DrinkActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Bundle b = new Bundle();
+		b = getIntent().getExtras(); 
+		if (b != null){
+			int numberOfBeers = b.getInt("numberOfBeers");
+			int startTime = b.getInt("startMinutes");
+			int endTime = b.getInt("endMinutes");
+		}
+		
+		ProgressBar progress = (ProgressBar) findViewById(R.id.progressBar1);
 		setContentView(R.layout.activity_drink);
 
-		final View controlsView = findViewById(R.id.fullscreen_content_controls);
-		final View contentView = findViewById(R.id.fullscreen_content);
+		final View controlsView = findViewById(R.id.videoMediaControllerHolder);
+		final View contentView = findViewById(R.id.grid1);
 
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
@@ -110,12 +120,7 @@ public class DrinkActivity extends Activity {
 				}
 			}
 		});
-
-		// Upon interacting with UI controls, delay any scheduled hide()
-		// operations to prevent the jarring behavior of controls going away
-		// while interacting with the UI.
-		findViewById(R.id.dummy_button).setOnTouchListener(
-				mDelayHideTouchListener);
+	
 	}
 
 	@Override
@@ -158,5 +163,9 @@ public class DrinkActivity extends Activity {
 	private void delayedHide(int delayMillis) {
 		mHideHandler.removeCallbacks(mHideRunnable);
 		mHideHandler.postDelayed(mHideRunnable, delayMillis);
+	}
+	
+	private void delayUpdate(){
+		
 	}
 }
