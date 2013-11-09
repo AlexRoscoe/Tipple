@@ -26,16 +26,17 @@ public class DrinkUp extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+		i+=50;
         Display display = this.getDisplay();
 		Point size = new Point();
 		display.getSize(size);
 		int width = size.x;
 		int height = size.y;
 		p = new Paint(); 
-		p.setColor(Color.RED);
+		p.setColor(Color.BLACK);
+		
 		canvas.drawBitmap(beer, new Rect(0,0,beer.getWidth(), beer.getHeight()), new Rect(0,0, width, height), null);
 		canvas.drawRect(new Rect(0, 0, width, i), p);
 		canvas.drawBitmap(bottle, new Rect(0,0,bottle.getWidth(), bottle.getHeight()), new Rect(0,0, width, height), null);
-		i+=50;
     }
 }

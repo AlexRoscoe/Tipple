@@ -79,22 +79,6 @@ public class DrinkActivity extends Activity {
 		// are available.
 		delayedHide(100);
 	}
-
-	/**
-	 * Touch listener to use for in-layout UI controls to delay hiding the
-	 * system UI. This is to prevent the jarring behavior of controls going away
-	 * while interacting with activity UI.
-	 */
-	View.OnTouchListener mDelayHideTouchListener = new View.OnTouchListener() {
-		@Override
-		public boolean onTouch(View view, MotionEvent motionEvent) {
-			if (AUTO_HIDE) {
-				delayedHide(AUTO_HIDE_DELAY_MILLIS);
-			}
-			return false;
-		}
-	};
-
 	
 	Handler mHideHandler = new Handler();
 	Runnable mHideRunnable = new Runnable() {
@@ -109,8 +93,9 @@ public class DrinkActivity extends Activity {
 			calculatePercentageLeft(startTime, endTime, numBeers); 
 			Bitmap b = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 			Canvas c = new Canvas(b); 
+			view.invalidate();
 			view.draw(c); 
-			delayedHide(50);
+			delayedHide(30);
 		}
 	};
 
@@ -119,7 +104,7 @@ public class DrinkActivity extends Activity {
 	 * previously scheduled calls.
 	 */
 	private void delayedHide(int delayMillis) {
-		mHideHandler.removeCallbacks(mHideRunnable);
+		//mHideHandler.removeCallbacks(mHideRunnable);
 		mHideHandler.postDelayed(mHideRunnable, delayMillis);
 	}
 	
