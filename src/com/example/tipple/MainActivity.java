@@ -2,9 +2,12 @@ package com.example.tipple;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.NumberPicker;
+import android.widget.TimePicker;
 
 public class MainActivity extends Activity {
 
@@ -20,7 +23,15 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// Collect form data. 
+				final NumberPicker numberOfBeers = (NumberPicker) findViewById(R.id.numberOfBeer);
+				final TimePicker finishTime = (TimePicker) findViewById(R.id.finishTime); 
 				
+				
+				// Start new Intent (Your activity)
+				Intent thing = new Intent(); 
+				
+				// Package data
+				// Start intent
 			}
 		});
     }
