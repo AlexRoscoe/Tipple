@@ -1,7 +1,6 @@
 package com.example.tipple;
 
-import com.example.tipple.util.SystemUiHider;
-
+import java.util.Calendar;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
@@ -27,7 +26,7 @@ public class DrinkActivity extends Activity {
 	 * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
 	 * user interaction before hiding the system UI.
 	 */
-	private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
+	private static final int AUTO_HIDE_DELAY_MILLIS = 1000;
 
 	/**
 	 * If set, will toggle the system UI visibility upon interaction. Otherwise,
@@ -44,23 +43,30 @@ public class DrinkActivity extends Activity {
 	 * The instance of the {@link SystemUiHider} for this activity.
 	 */
 	private SystemUiHider mSystemUiHider;
+	
+	private int startTime, endTime, numBeers; 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_drink);
+		
+		Bundle b = new Bundle(); 
+		b = getIntent().getExtras(); 
+		this.startTime = b.getInt("startTime");
+		this.endTime = b.getInt("endTime"); 
+		this.numBeers = b.getInt("numBeers");
+		
 
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
 		final View contentView = findViewById(R.id.fullscreen_content);
 
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
-		mSystemUiHider = SystemUiHider.getInstance(this, contentView,
-				HIDER_FLAGS);
+		mSystemUiHider = SystemUiHider.getInstance(this, contentView, HIDER_FLAGS);
 		mSystemUiHider.setup();
-		mSystemUiHider
-				.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
+		mSystemUiHider.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
 					// Cached values.
 					int mControlsHeight;
 					int mShortAnimTime;
@@ -125,7 +131,7 @@ public class DrinkActivity extends Activity {
 		// Trigger the initial hide() shortly after the activity has been
 		// created, to briefly hint to the user that UI controls
 		// are available.
-		delayedHide(100);
+		delayedHide(5000);
 	}
 
 	/**
@@ -147,7 +153,8 @@ public class DrinkActivity extends Activity {
 	Runnable mHideRunnable = new Runnable() {
 		@Override
 		public void run() {
-			mSystemUiHider.hide();
+			calculatePercentageLeft(startTime, endTime, numBeers); 
+			delayedHide(5000); 
 		}
 	};
 
@@ -158,5 +165,21 @@ public class DrinkActivity extends Activity {
 	private void delayedHide(int delayMillis) {
 		mHideHandler.removeCallbacks(mHideRunnable);
 		mHideHandler.postDelayed(mHideRunnable, delayMillis);
+	}
+	
+	private double calculatePercentageLeft(int startTime, int endTime, int numBeers) {
+		int maxSeconds = endTime - startTime; 
+		// Current time
+		Calendar c = Calendar.getInstance(); 
+		int hour = c.get(Calendar.HOUR_OF_DAY); // 0 - 23
+		int minute = c.get(Calendar.MINUTE); // 0 - 59
+		int currentTime = hour*60*60 + minute*60;
+		int currentSeconds = currentTime - startTime; 
+		
+		double percentageCompleted = currentSeconds / maxSeconds; 
+		double bottlePercentage = percentageCompleted % numBeers;
+		int numBottlesCompleted = (int) (percentageCompleted / numBeers); 
+		
+		return bottlePercentage; 
 	}
 }
