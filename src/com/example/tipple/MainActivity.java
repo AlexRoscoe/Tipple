@@ -23,15 +23,18 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// Collect form data. 
-				final NumberPicker numberOfBeers = (NumberPicker) findViewById(R.id.numberOfBeer);
-				final TimePicker finishTime = (TimePicker) findViewById(R.id.finishTime); 
-				
+				final NumberPicker numberPicker = (NumberPicker) findViewById(R.id.numberOfBeer);
+				int numberOfBeers = numberPicker.getValue(); 
+				final TimePicker timePicker = (TimePicker) findViewById(R.id.finishTime); 
+				int hour = timePicker.getCurrentHour(); 
+				int minute = timePicker.getCurrentMinute();
 				
 				// Start new Intent (Your activity)
-				Intent thing = new Intent(); 
-				
-				// Package data
-				// Start intent
+				Intent drinkCounter = new Intent(MainActivity.this, DrinkActivity.class); 
+				drinkCounter.putExtra("numberOfBeers", numberOfBeers);
+				drinkCounter.putExtra("hour", hour);
+				drinkCounter.putExtra("minute", minute);
+				startActivity(drinkCounter); 
 			}
 		});
     }
